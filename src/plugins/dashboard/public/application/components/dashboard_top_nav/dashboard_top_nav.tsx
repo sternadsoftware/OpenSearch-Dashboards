@@ -50,6 +50,8 @@ const TopNav = ({
   const [topNavMenu, setTopNavMenu] = useState<any>();
   const [topRightControls, setTopRightControls] = useState<TopNavControlData[]>([]);
   const [isFullScreenMode, setIsFullScreenMode] = useState<any>();
+  // @ts-ignore
+  const [hits, setHits] = useState<{ total: number; hits: any[] } | undefined>(undefined);
 
   const { services } = useOpenSearchDashboards<DashboardServices>();
   const { TopNavMenu, HeaderControl } = services.navigation.ui;
