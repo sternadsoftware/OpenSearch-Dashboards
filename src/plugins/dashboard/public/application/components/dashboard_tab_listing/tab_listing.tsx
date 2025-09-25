@@ -13,10 +13,29 @@ export interface DashboardTabListingProps {
   showLandingPage: boolean;
 }
 
+interface TablistingConfig {
+  group: Group;
+}
+
+interface Group {
+  dashboardIds: string[];
+  detailDashboards: string[];
+}
+
+const config: TablistingConfig = {
+  group: {
+    dashboardIds: ['c39012d0-eb7a-11ed-8e00-17d7d50cd7b2'],
+    detailDashboards: [
+      'edf84fe0-e1a0-11e7-b6d5-4dc382ef7f5b',
+      '722b74f0-b882-11e8-a6d9-e546fe2bba5f',
+    ],
+  },
+};
+
 export const DashboardTabListing = (props: DashboardTabListingProps) => {
-  const [dashboardList, setDashboardList] = useState<{ total: number; hits: any[] } | undefined>(
-    undefined
-  );
+  const [dashboardList, setDashboardList] = useState<
+    Array<{ id: string; title: string }> | undefined
+  >(undefined);
 
   const [selectedTabId, setSelectedTabId] = useState<string | undefined>(undefined);
 
@@ -41,6 +60,7 @@ export const DashboardTabListing = (props: DashboardTabListingProps) => {
 
     // todo tlongo do we need the 'search' param?
     const find = async (search: any) => {
+      // todo tlongo query for ids in config
       const res = await services.savedObjectsClient.find({
         type: 'dashboard',
         search: search ? `${search}*` : undefined,
@@ -52,10 +72,23 @@ export const DashboardTabListing = (props: DashboardTabListingProps) => {
       });
       const list = res.savedObjects?.map(mapListAttributesToDashboardProvider) || [];
 
-      return {
-        total: list.length,
-        hits: list,
-      };
+      return list
+        .filter(
+          (entry) =>
+            config.group.dashboardIds.includes(entry.id) ||
+            config.group.detailDashboards.includes(entry.id)
+        )
+        .map((entry) => {
+          return {
+            id: entry.id as string,
+            title: entry.title as string,
+          };
+        });
+
+      // return {
+      //   total: list.length,
+      //   hits: list,
+      // };
     };
 
     find('').then((res) => setDashboardList(res));
@@ -76,17 +109,38 @@ export const DashboardTabListing = (props: DashboardTabListingProps) => {
   };
 
   return (
-    <EuiTabs>
-      {dashboardList &&
-        dashboardList.hits.map((dashboard) => (
-          <EuiTab
-            isSelected={isDashboardSelected(dashboard.id)}
-            key={dashboard.id}
-            onClick={() => selectDashboard(dashboard.id)}
-          >
-            {dashboard.title}
-          </EuiTab>
-        ))}
-    </EuiTabs>
+    <>
+      <EuiTabs>
+        {dashboardList &&
+          config.group.dashboardIds.map((id) => {
+            const dashboard = dashboardList.find((d) => d.id === id);
+
+            return (
+              <EuiTab
+                isSelected={isDashboardSelected(dashboard!.id)}
+                key={dashboard!.id}
+                onClick={() => selectDashboard(dashboard!.id)}
+              >
+                {dashboard!.title}
+              </EuiTab>
+            );
+          })}
+      </EuiTabs>
+      <EuiTabs display="condensed">
+        {dashboardList &&
+          config.group.detailDashboards.map((id) => {
+            const dashboard = dashboardList.find((d) => d.id === id);
+            return (
+              <EuiTab
+                key={dashboard!.id}
+                onClick={() => selectDashboard(dashboard!.id)}
+                isSelected={isDashboardSelected(dashboard!.id)}
+              >
+                {dashboard!.title}
+              </EuiTab>
+            );
+          })}
+      </EuiTabs>
+    </>
   );
 };
