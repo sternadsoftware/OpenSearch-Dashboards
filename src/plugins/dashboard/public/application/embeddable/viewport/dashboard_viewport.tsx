@@ -160,7 +160,6 @@ export class DashboardViewport extends React.Component<DashboardViewportProps, S
             logos={this.props.logos}
           />
         )}
-        {/* todo tlongo Grid ist die Visualisierung */}
         <DashboardGrid container={container} PanelComponent={PanelComponent} />
       </div>
     );

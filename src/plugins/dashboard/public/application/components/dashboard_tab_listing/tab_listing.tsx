@@ -68,7 +68,6 @@ export const DashboardTabListing = ({
     services.application.navigateToUrl(`#/view/${dashboardId}`);
     const container = document.getElementById('dashboardViewport')?.firstChild;
     if (container) {
-      // todo tlongo is this the right way to do this?
       ReactDOM.unmountComponentAtNode(document.getElementById('dashboardViewport') as Element);
     }
   };

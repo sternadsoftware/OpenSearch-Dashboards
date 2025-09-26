@@ -28,17 +28,15 @@ export const DashboardTabListingContainer = () => {
       };
     };
 
-    // todo tlongo do we need the 'search' param?
-    const find = async (search: any) => {
-      // todo tlongo query for ids in config
+    const fetchDashboards = async () => {
+      // todo tlongo optimization: query for ids in config
       const res = await services.savedObjectsClient.find({
         type: 'dashboard',
-        search: search ? `${search}*` : undefined,
-        fields: ['title', 'type', 'description', 'updated_at'],
-        perPage: 10000,
+        search: undefined,
+        fields: ['title'],
+        perPage: 100,
         page: 1,
-        searchFields: ['title^3', 'type', 'description'],
-        defaultSearchOperator: 'AND',
+        searchFields: ['title^3'],
       });
       const list = res.savedObjects?.map(mapListAttributesToDashboardProvider) || [];
 
@@ -48,7 +46,7 @@ export const DashboardTabListingContainer = () => {
       };
     };
 
-    find('').then((res) => setDashboardList(res.hits));
+    fetchDashboards().then((res) => setDashboardList(res.hits));
   }, [services]);
 
   return (
