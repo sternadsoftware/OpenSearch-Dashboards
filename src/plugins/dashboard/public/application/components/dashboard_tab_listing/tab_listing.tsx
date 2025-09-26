@@ -9,8 +9,9 @@ import ReactDOM from 'react-dom';
 import { useOpenSearchDashboards } from '../../../../../opensearch_dashboards_react/public';
 import { DashboardServices } from '../../../types';
 
-export interface DashboardTabListingProps {
-  showLandingPage: boolean;
+interface DashboardTabListingProps {
+  dashboards: any[];
+  selectedDashboardId: string;
 }
 
 interface TabListingConfig {
@@ -38,57 +39,16 @@ const config: TabListingConfig = {
   ],
 };
 
-export const DashboardTabListing = (props: DashboardTabListingProps) => {
-  const [dashboardList, setDashboardList] = useState<{ total: number; hits: any[] } | undefined>(
-    undefined
-  );
-
+export const DashboardTabListing = ({
+  dashboards,
+  selectedDashboardId,
+}: DashboardTabListingProps) => {
   const [selectedGroupId, setSelectedGroupId] = useState<string | undefined>(undefined);
   const [selectedDetailsDashboard, setSelectedDetailsDashboard] = useState<string | undefined>(
     undefined
   );
 
   const { services } = useOpenSearchDashboards<DashboardServices>();
-
-  useEffect(() => {
-    if (props.showLandingPage) {
-      services.chrome.setBreadcrumbs([{ text: 'Dashboards' }]);
-    }
-    const mapListAttributesToDashboardProvider = (obj: any) => {
-      const provider = (services.dashboardProviders() || {})[obj.type];
-      return {
-        id: obj.id,
-        appId: provider.appId,
-        type: provider.savedObjectsName,
-        ...obj.attributes,
-        updated_at: obj.updated_at,
-        viewUrl: provider.viewUrlPathFn(obj),
-        editUrl: provider.editUrlPathFn(obj),
-      };
-    };
-
-    // todo tlongo do we need the 'search' param?
-    const find = async (search: any) => {
-      // todo tlongo query for ids in config
-      const res = await services.savedObjectsClient.find({
-        type: 'dashboard',
-        search: search ? `${search}*` : undefined,
-        fields: ['title', 'type', 'description', 'updated_at'],
-        perPage: 10000,
-        page: 1,
-        searchFields: ['title^3', 'type', 'description'],
-        defaultSearchOperator: 'AND',
-      });
-      const list = res.savedObjects?.map(mapListAttributesToDashboardProvider) || [];
-
-      return {
-        total: list.length,
-        hits: list,
-      };
-    };
-
-    find('').then((res) => setDashboardList(res));
-  }, [props.showLandingPage, services]);
 
   const isDashboardSelected = (dashboardId: string): boolean => {
     return selectedGroupId !== undefined && selectedGroupId === dashboardId;
@@ -101,6 +61,7 @@ export const DashboardTabListing = (props: DashboardTabListingProps) => {
   const selectDashboard = (dashboardId: string, isDetailsBoard: boolean = false) => {
     if (!isDetailsBoard) {
       setSelectedGroupId(dashboardId);
+      setSelectedDetailsDashboard(undefined);
     } else {
       setSelectedDetailsDashboard(dashboardId);
     }
@@ -111,6 +72,10 @@ export const DashboardTabListing = (props: DashboardTabListingProps) => {
       ReactDOM.unmountComponentAtNode(document.getElementById('dashboardViewport') as Element);
     }
   };
+
+  useEffect(() => {
+    setSelectedGroupId(selectedDashboardId);
+  }, [selectedDashboardId]);
 
   const renderDashboardTab = (dashboard: any, isDetailsBoard: boolean = false) => {
     return (
@@ -131,21 +96,21 @@ export const DashboardTabListing = (props: DashboardTabListingProps) => {
   return (
     <>
       <EuiTabs>
-        {dashboardList &&
+        {dashboards &&
           config.groups.map((group) => {
-            const dashboard = dashboardList.hits.find((d) => d.id === group.dashboardId);
+            const dashboard = dashboards.find((d) => d.id === group.dashboardId);
 
             return renderDashboardTab(dashboard);
           })}
       </EuiTabs>
       <EuiTabs display="condensed" size="s">
-        {dashboardList &&
+        {dashboards &&
           selectedGroupId &&
           config.groups
             .filter((group) => group.dashboardId === selectedGroupId)
             .flatMap((group) => {
               return group.detailDashboards.map((dashboardId) => {
-                const dashboard = dashboardList.hits.find((d) => d.id === dashboardId);
+                const dashboard = dashboards.find((d) => d.id === dashboardId);
 
                 return renderDashboardTab(dashboard, true);
               });

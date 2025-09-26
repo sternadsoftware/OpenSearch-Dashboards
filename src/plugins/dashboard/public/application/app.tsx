@@ -9,7 +9,7 @@ import { Route, Switch } from 'react-router-dom';
 import { EuiFlexItem } from '@elastic/eui';
 import { DashboardConstants, createDashboardEditUrl } from '../dashboard_constants';
 import { DashboardEditor, DashboardListing, DashboardNoMatch } from './components';
-import { DashboardTabListing } from './components/dashboard_tab_listing/tab_listing';
+import { DashboardTabListingContainer } from './components/dashboard_tab_listing/dashboard_tab_listing_container';
 
 export const DashboardApp = () => {
   return (
@@ -17,7 +17,7 @@ export const DashboardApp = () => {
       <Route path={[DashboardConstants.CREATE_NEW_DASHBOARD_URL, createDashboardEditUrl(':id')]}>
         <div className="app-container dshAppContainer">
           <EuiFlexItem style={{ flexGrow: 0 }}>
-            <DashboardTabListing showLandingPage={false} />
+            <DashboardTabListingContainer />
           </EuiFlexItem>
           <DashboardEditor />
           <div id="dashboardViewport" />
