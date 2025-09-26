@@ -52,7 +52,7 @@ export const DashboardTabListingContainer = () => {
   return (
     <>
       {dashboardList && (
-        <DashboardTabListing dashboards={dashboardList} selectedDashboardId={dashboardIdFromUrl} />
+        <DashboardTabListing dashboards={dashboardList} loadedDashboardId={dashboardIdFromUrl} />
       )}
     </>
   );

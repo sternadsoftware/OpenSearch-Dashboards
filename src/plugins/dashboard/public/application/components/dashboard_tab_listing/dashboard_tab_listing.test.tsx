@@ -30,7 +30,7 @@ const renderListing = () => {
   return (
     <DashboardTabListing
       dashboards={dashboards}
-      selectedDashboardId="c39012d0-eb7a-11ed-8e00-17d7d50cd7b2"
+      loadedDashboardId="c39012d0-eb7a-11ed-8e00-17d7d50cd7b2"
     />
   );
 };
