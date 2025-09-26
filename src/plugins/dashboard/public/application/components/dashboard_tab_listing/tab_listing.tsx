@@ -43,7 +43,10 @@ export const DashboardTabListing = (props: DashboardTabListingProps) => {
     undefined
   );
 
-  const [selectedTabId, setSelectedTabId] = useState<string | undefined>(undefined);
+  const [selectedGroupId, setSelectedGroupId] = useState<string | undefined>(undefined);
+  const [selectedDetailsDashboard, setSelectedDetailsDashboard] = useState<string | undefined>(
+    undefined
+  );
 
   const { services } = useOpenSearchDashboards<DashboardServices>();
 
@@ -88,11 +91,19 @@ export const DashboardTabListing = (props: DashboardTabListingProps) => {
   }, [props.showLandingPage, services]);
 
   const isDashboardSelected = (dashboardId: string): boolean => {
-    return selectedTabId !== undefined && selectedTabId === dashboardId;
+    return selectedGroupId !== undefined && selectedGroupId === dashboardId;
   };
 
-  const selectDashboard = (dashboardId: string) => {
-    setSelectedTabId(dashboardId);
+  const isDetailsDashboardSelected = (dashboardId: string): boolean => {
+    return selectedDetailsDashboard !== undefined && selectedDetailsDashboard === dashboardId;
+  };
+
+  const selectDashboard = (dashboardId: string, isDetailsBoard: boolean = false) => {
+    if (!isDetailsBoard) {
+      setSelectedGroupId(dashboardId);
+    } else {
+      setSelectedDetailsDashboard(dashboardId);
+    }
     services.application.navigateToUrl(`#/view/${dashboardId}`);
     const container = document.getElementById('dashboardViewport')?.firstChild;
     if (container) {
@@ -101,12 +112,16 @@ export const DashboardTabListing = (props: DashboardTabListingProps) => {
     }
   };
 
-  const renderDashboardTab = (dashboard: any) => {
+  const renderDashboardTab = (dashboard: any, isDetailsBoard: boolean = false) => {
     return (
       <EuiTab
-        isSelected={isDashboardSelected(dashboard!.id)}
+        isSelected={
+          isDetailsBoard
+            ? isDetailsDashboardSelected(dashboard!.id)
+            : isDashboardSelected(dashboard!.id)
+        }
         key={dashboard!.id}
-        onClick={() => selectDashboard(dashboard!.id)}
+        onClick={() => selectDashboard(dashboard!.id, isDetailsBoard)}
       >
         {dashboard!.title}
       </EuiTab>
@@ -123,16 +138,16 @@ export const DashboardTabListing = (props: DashboardTabListingProps) => {
             return renderDashboardTab(dashboard);
           })}
       </EuiTabs>
-      <EuiTabs display="condensed">
+      <EuiTabs display="condensed" size="s">
         {dashboardList &&
-          selectedTabId &&
+          selectedGroupId &&
           config.groups
-            .filter((group) => group.dashboardId === selectedTabId)
-            .map((group) => {
+            .filter((group) => group.dashboardId === selectedGroupId)
+            .flatMap((group) => {
               return group.detailDashboards.map((dashboardId) => {
                 const dashboard = dashboardList.hits.find((d) => d.id === dashboardId);
 
-                return renderDashboardTab(dashboard);
+                return renderDashboardTab(dashboard, true);
               });
             })}
       </EuiTabs>
