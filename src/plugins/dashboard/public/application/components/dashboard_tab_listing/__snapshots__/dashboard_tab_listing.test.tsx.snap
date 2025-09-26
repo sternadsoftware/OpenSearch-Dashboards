@@ -1,0 +1,125 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`DashboardTabListing should render 1`] = `
+<DashboardTabListing
+  dashboards={
+    Array [
+      Object {
+        "id": "c39012d0-eb7a-11ed-8e00-17d7d50cd7b2",
+        "title": "One",
+      },
+      Object {
+        "id": "edf84fe0-e1a0-11e7-b6d5-4dc382ef7f5b",
+        "title": "Two",
+      },
+      Object {
+        "id": "722b74f0-b882-11e8-a6d9-e546fe2bba5f",
+        "title": "Three",
+      },
+      Object {
+        "id": "7adfa750-4c81-11e8-b3d7-01146121b73d",
+        "title": "Three",
+      },
+    ]
+  }
+  selectedDashboardId="c39012d0-eb7a-11ed-8e00-17d7d50cd7b2"
+>
+  <EuiTabs>
+    <div
+      className="euiTabs"
+      role="tablist"
+    >
+      <EuiTab
+        isSelected={true}
+        key="c39012d0-eb7a-11ed-8e00-17d7d50cd7b2"
+        onClick={[Function]}
+      >
+        <button
+          aria-selected={true}
+          className="euiTab euiTab-isSelected"
+          disabled={false}
+          onClick={[Function]}
+          role="tab"
+          type="button"
+        >
+          <span
+            className="euiTab__content"
+          >
+            One
+          </span>
+        </button>
+      </EuiTab>
+      <EuiTab
+        isSelected={false}
+        key="7adfa750-4c81-11e8-b3d7-01146121b73d"
+        onClick={[Function]}
+      >
+        <button
+          aria-selected={false}
+          className="euiTab"
+          disabled={false}
+          onClick={[Function]}
+          role="tab"
+          type="button"
+        >
+          <span
+            className="euiTab__content"
+          >
+            Three
+          </span>
+        </button>
+      </EuiTab>
+    </div>
+  </EuiTabs>
+  <EuiTabs
+    display="condensed"
+    size="s"
+  >
+    <div
+      className="euiTabs euiTabs--condensed euiTabs--small"
+      role="tablist"
+    >
+      <EuiTab
+        isSelected={false}
+        key="edf84fe0-e1a0-11e7-b6d5-4dc382ef7f5b"
+        onClick={[Function]}
+      >
+        <button
+          aria-selected={false}
+          className="euiTab"
+          disabled={false}
+          onClick={[Function]}
+          role="tab"
+          type="button"
+        >
+          <span
+            className="euiTab__content"
+          >
+            Two
+          </span>
+        </button>
+      </EuiTab>
+      <EuiTab
+        isSelected={false}
+        key="722b74f0-b882-11e8-a6d9-e546fe2bba5f"
+        onClick={[Function]}
+      >
+        <button
+          aria-selected={false}
+          className="euiTab"
+          disabled={false}
+          onClick={[Function]}
+          role="tab"
+          type="button"
+        >
+          <span
+            className="euiTab__content"
+          >
+            Three
+          </span>
+        </button>
+      </EuiTab>
+    </div>
+  </EuiTabs>
+</DashboardTabListing>
+`;

@@ -14,7 +14,7 @@ interface DashboardTabListingProps {
   selectedDashboardId: string;
 }
 
-interface TabListingConfig {
+export interface TabListingConfig {
   groups: Group[];
 }
 
