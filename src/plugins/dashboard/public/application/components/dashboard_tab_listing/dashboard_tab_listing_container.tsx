@@ -8,13 +8,16 @@ import { useParams } from 'react-router-dom';
 import { useOpenSearchDashboards } from '../../../../../opensearch_dashboards_react/public';
 import { DashboardServices } from '../../../types';
 import { DashboardTabListing } from './tab_listing';
+import { DashboardGroupsConfig } from '../../../plugin';
 
 export const DashboardTabListingContainer = () => {
   const [dashboardList, setDashboardList] = useState<any[] | undefined>(undefined);
+  const [groupConfig, setGroupConfig] = useState<DashboardGroupsConfig | undefined>(undefined);
   const { services } = useOpenSearchDashboards<DashboardServices>();
   const { id: dashboardIdFromUrl } = useParams<{ id: string }>();
 
   useEffect(() => {
+    setGroupConfig(services.pluginInitializerContext.config.get<DashboardGroupsConfig>());
     const mapListAttributesToDashboardProvider = (obj: any) => {
       const provider = (services.dashboardProviders() || {})[obj.type];
       return {
@@ -51,8 +54,12 @@ export const DashboardTabListingContainer = () => {
 
   return (
     <>
-      {dashboardList && (
-        <DashboardTabListing dashboards={dashboardList} loadedDashboardId={dashboardIdFromUrl} />
+      {dashboardList && groupConfig && (
+        <DashboardTabListing
+          dashboards={dashboardList}
+          loadedDashboardId={dashboardIdFromUrl}
+          config={groupConfig}
+        />
       )}
     </>
   );

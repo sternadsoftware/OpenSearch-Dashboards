@@ -385,3 +385,17 @@
 
 # Set the content of the banner
 # banner.content: "This is an important announcement for all users. [Learn more](https://opensearch.org) about OpenSearch."
+
+dashboard:
+  groups:
+      - mainDashboardId: c39012d0-eb7a-11ed-8e00-17d7d50cd7b2
+        detailsDashboards:
+          - edf84fe0-e1a0-11e7-b6d5-4dc382ef7f5b
+          - 722b74f0-b882-11e8-a6d9-e546fe2bba5f
+      - mainDashboardId: 7adfa750-4c81-11e8-b3d7-01146121b73d
+        detailsDashboards:
+          - 722b74f0-b882-11e8-a6d9-e546fe2bba5f
+      - mainDashboardId: 46e21fa0-9d0f-11f0-93dd-e7648e9a1cc0
+        detailsDashboards:
+          - fc22d6d0-9d0e-11f0-93dd-e7648e9a1cc0
+          - e2c01ef0-9d0e-11f0-93dd-e7648e9a1cc0

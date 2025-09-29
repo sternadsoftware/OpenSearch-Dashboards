@@ -8,10 +8,12 @@ import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 import { useOpenSearchDashboards } from '../../../../../opensearch_dashboards_react/public';
 import { DashboardServices } from '../../../types';
+import { DashboardGroupsConfig } from '../../../plugin';
 
 interface DashboardTabListingProps {
   dashboards: any[];
   loadedDashboardId: string;
+  config: DashboardGroupsConfig;
 }
 
 export interface TabListingConfig {
@@ -23,27 +25,12 @@ interface Group {
   detailDashboards: string[];
 }
 
-const config: TabListingConfig = {
-  groups: [
-    {
-      mainDashboardId: 'c39012d0-eb7a-11ed-8e00-17d7d50cd7b2',
-      detailDashboards: [
-        'edf84fe0-e1a0-11e7-b6d5-4dc382ef7f5b',
-        '722b74f0-b882-11e8-a6d9-e546fe2bba5f',
-      ],
-    },
-    {
-      mainDashboardId: '7adfa750-4c81-11e8-b3d7-01146121b73d',
-      detailDashboards: ['722b74f0-b882-11e8-a6d9-e546fe2bba5f'],
-    },
-  ],
-};
-
 const VIEWPORT_CONTAINER_ID = 'dashboardViewport';
 
 export const DashboardTabListing = ({
   dashboards,
   loadedDashboardId,
+  config,
 }: DashboardTabListingProps) => {
   const [selectedMainDashboardId, setSelectedMainDashboardId] = useState<string | undefined>(
     undefined
@@ -82,12 +69,12 @@ export const DashboardTabListing = ({
 
   useEffect(() => {
     const isDetailsBoard = (boardId: string) =>
-      config.groups.flatMap((g) => g.detailDashboards).filter((d) => d === boardId).length > 0;
+      config.groups.flatMap((g) => g.detailsDashboards).filter((d) => d === boardId).length > 0;
 
     if (!isDetailsBoard(loadedDashboardId)) {
       setSelectedMainDashboardId(loadedDashboardId);
     }
-  }, [loadedDashboardId]);
+  }, [config, config.groups, loadedDashboardId]);
 
   const renderDashboardTab = (dashboard: any, isDetailsBoard: boolean = false) => {
     return (
@@ -121,7 +108,7 @@ export const DashboardTabListing = ({
           config.groups
             .filter((group) => group.mainDashboardId === selectedMainDashboardId)
             .flatMap((group) => {
-              return group.detailDashboards.map((dashboardId) => {
+              return group.detailsDashboards.map((dashboardId) => {
                 const dashboard = dashboards.find((d) => d.id === dashboardId);
 
                 return renderDashboardTab(dashboard, true);

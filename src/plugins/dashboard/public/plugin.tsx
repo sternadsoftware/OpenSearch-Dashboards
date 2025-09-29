@@ -141,6 +141,15 @@ export interface DashboardFeatureFlagConfig {
   allowByValueEmbeddables: boolean;
 }
 
+export interface DashboardGroupsConfig {
+  groups: Group[];
+}
+
+export interface Group {
+  mainDashboardId: string;
+  detailsDashboards: string[];
+}
+
 interface SetupDependencies {
   data: DataPublicPluginSetup;
   embeddable: EmbeddableSetup;
